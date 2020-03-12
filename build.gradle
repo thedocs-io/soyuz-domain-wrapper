@@ -1,0 +1,46 @@
+apply plugin: "java"
+apply plugin: "maven"
+apply from: "./mavenCentral.gradle"
+
+group = "io.thedocs"
+archivesBaseName = "soyuz-domain-wrapper"
+version = "1.0"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile([
+            "com.google.code.findbugs:jsr305:3.0.0",
+            "com.fasterxml.jackson.core:jackson-annotations:2.6.3",
+            "io.thedocs:soyuz-is:1.0",
+            "io.thedocs:soyuz-to:1.0.1"
+    ])
+
+    compileOnly "org.projectlombok:lombok:1.18.8"
+    annotationProcessor "org.projectlombok:lombok:1.18.8"
+
+    testCompile([
+            "junit:junit:4.11",
+            "org.spockframework:spock-core:1.0-groovy-2.4",
+            "io.thedocs:soyuz-is-to:0.72",
+            "org.projectlombok:lombok:1.16.18"
+    ])
+}
+
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from "build/docs/javadoc"
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
